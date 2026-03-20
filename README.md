@@ -231,6 +231,28 @@ echo -n "aabbb" > f2.txt
 
 <img width="1040" height="438" alt="image" src="https://github.com/user-attachments/assets/080ad732-6a85-4cf8-931a-32ce83169099" />
 
+--- 
+
+## Manifiesto de transparencia
+
+Durante el desarrollo de esta práctica se hizo uso de IA generativa (Claude de Anthropic) como herramienta de apoyo en los siguientes puntos:
+
+### `wcat`
+No se utilizó IA generativa en el desarrollo de este programa. La implementación fue realizada de forma completamente independiente.
+
+### `wgrep`
+Se consultó IA generativa de forma puntual para entender el uso de dos funciones de la librería estándar de C:
+- `getline()` — para comprender cómo manejar líneas de longitud arbitraria de forma dinámica, como alternativa a `fgets()`.
+- `strstr()` — para entender cómo verificar si una cadena contiene un término de búsqueda dentro de ella.
+- lectura desde `stdin` que al final no resultó un desafio
+
+La lógica del programa (estructura general, manejo de argumentos y desde archivos) fue desarrollada e integrada de forma propia.
+
+### `wzip` y `wunzip`
+Se recurrió a IA generativa con mayor medida en el desarrollo de estos programas, dado que el algoritmo RLE en formato binario representaba un concepto nuevo. El punto de mayor dificultad fue entender que la salida debía escribirse en formato binario usando `fwrite()` con bloques de 4 bytes para el entero y 1 byte para el carácter, en lugar de una representación en texto.
+
+No obstante, una vez obtenido el código, este fue estudiado en detalle: se analizó la lógica de compresión carácter por carácter, el manejo del estado compartido entre archivos para fusionar rachas entre ficheros consecutivos, y el mecanismo de lectura por bloques en `wunzip` con `fread()`. El resultado fue una comprensión completa de la implementación antes de incluirla en la entrega.
+
 
 
 
