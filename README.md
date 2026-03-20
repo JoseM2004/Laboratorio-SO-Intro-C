@@ -123,13 +123,113 @@ imprime en la salida únicamente las líneas que contienen el término de búsqu
 <img width="941" height="166" alt="Captura de pantalla 2026-03-18 190344" src="https://github.com/user-attachments/assets/ccd50661-1de2-43ec-8aa8-be207f91fcb9" />
 
 ### Archivo inexistente y prueba con stdin (no se especifica el archivo pero si la palabra):
-<img width="785" height="221" alt="image" src="https://github.com/user-attachments/assets/65400102-e3c9-45d2-a78e-9e09e9035341" />
+<img width="785" height="221" alt="image" src="https://github.com/user-attachments/assets/65400102-e3c9-45d2-a78e-9e09e9035341" /> 
 
+---
 
+## Aplicación 3: `wzip` y `wunzip`
 
+Pareja de programas para comprimir y descomprimir archivos usando el algoritmo **Run-Length Encoding (RLE)**. `wzip` reemplaza secuencias de caracteres repetidos por un entero de 4 bytes (el conteo) seguido del carácter correspondiente. `wunzip` realiza la operación inversa.
 
+Por ejemplo, la cadena `aaaaaaaaaabbbb` se comprime como `10a4b` (en formato binario: `[10][a][4][b]`).
 
+---
 
+### `wzip`
+
+#### `main(int argc, char *argv[])`
+
+**Descripción:** Itera sobre cada archivo pasado y asigna la compresión a `comprimir()`. Además, conserva el carácter actual y su conteo entre archivos, de modo que si una secuencia de caracteres continúa de un archivo a otro, se trate como una sola y se comprima correctamente.
+
+**Parámetros:**
+- `argc` — Número total de argumentos recibidos (incluyendo el nombre del programa).
+- `argv[]` — Arreglo de strings con los argumentos. `argv[1]` en adelante son los nombres de los archivos a comprimir.
+
+**Comportamiento:**
+- Si no se pasan archivos (`argc == 1`), imprime `"wzip: file1 [file2 ...]"` y termina con código de salida `1`.
+- Si algún archivo no puede abrirse, imprime `"wzip: cannot open file"` y termina con código de salida `1`.
+- Mantiene las variables `char_actual` y `conteo` compartidas entre todos los archivos, permitiendo fusionar rachas que crucen el límite entre archivos.
+- Al terminar todos los archivos, escribe la última racha pendiente a `stdout`.
+- Toda la salida comprimida se escribe en `stdout`, por lo que se usa redirección (`>`) para guardarla en un archivo.
+
+**Retorna:** `0` en caso de éxito.
+
+---
+
+#### `comprimir(FILE *fp, int *char_actual, int *conteo)`
+
+**Descripción:** Lee el archivo carácter por carácter y aplica compresión RLE: cuenta cuántas veces se repite un mismo carácter de forma consecutiva. Cuando la secuencia cambia, escribe el conteo y el carácter en `stdout` en formato binario (un entero de 4 bytes seguido de 1 byte del carácter).
+
+**Parámetros:**
+- `fp` — Puntero al archivo abierto que se va a comprimir.
+- `char_actual` — Puntero al carácter de la racha en curso. Se comparte entre llamadas para manejar rachas entre archivos.
+- `conteo` — Puntero al conteo acumulado de la racha en curso. Se comparte entre llamadas por la misma razón.
+
+**Comportamiento:**
+- Lee el archivo carácter por carácter con `fgetc()`.
+- Si el carácter leído es igual a `*char_actual`, incrementa `*conteo`.
+- Si es distinto, escribe la racha anterior con `fwrite()` en formato binario y comienza una nueva racha con el carácter actual.
+- La última racha no se escribe aquí sino en `main()`, para garantizar que no se escriba prematuramente al pasar de un archivo al siguiente.
+
+**Retorna:** `void`
+
+---
+
+### `wunzip`
+
+#### `main(int argc, char *argv[])`
+
+**Descripción:** itera sobre cada archivo comprimido pasado y asigna la descompresión a `descomprimir()`.
+
+**Parámetros:**
+- `argc` — Número total de argumentos recibidos (incluyendo el nombre del programa).
+- `argv[]` — Arreglo de strings con los argumentos. `argv[1]` en adelante son los nombres de los archivos comprimidos.
+
+**Comportamiento:**
+- Si no se pasan archivos (`argc == 1`), imprime `"wunzip: file1 [file2 ...]"` y termina con código de salida `1`.
+- Si algún archivo no puede abrirse, imprime `"wunzip: cannot open file"` y termina con código de salida `1`.
+- Llama a `descomprimir()` por cada archivo en el orden recibido, escribiendo todo a `stdout`.
+
+**Retorna:** `0` en caso de éxito.
+
+---
+
+#### `descomprimir(FILE *fp)`
+
+**Descripción:** Lee un archivo comprimido en formato RLE binario, interpretando cada bloque de 5 bytes como un par (conteo, carácter), e imprime el carácter el número de veces indicado por el conteo.
+
+**Parámetros:**
+- `fp` — Puntero al archivo comprimido que se va a descomprimir.
+
+**Comportamiento:**
+- Lee bloques de 5 bytes usando `fread()`: primero un entero de 4 bytes (`conteo`) y luego un carácter de 1 byte (`c`).
+- Por cada bloque leído, imprime `c` exactamente `conteo` veces con `printf()`.
+- Repite hasta llegar al final del archivo.
+
+**Retorna:** `void`
+
+# Pruebas realizadas
+### Crear archivo de prueba
+echo -n "aaaaaaaaaabbbb" > file.txt
+
+### Comprimir
+./wzip file.txt > file.z
+
+#### Descomprimir y verificar que el resultado es igual al original
+./wunzip file.z
+
+### Prueba con múltiples archivos (las rachas se fusionan entre archivos)
+echo -n "aaa" > f1.txt
+echo -n "aabbb" > f2.txt
+
+./wzip f1.txt f2.txt > combined.z
+./wunzip combined.z  # debe imprimir: aaaaaabbb  → 5a3b
+
+### Sin argumentos
+./wzip    # debe imprimir: wzip: file1 [file2 ...]
+./wunzip  # debe imprimir: wunzip: file1 [file2 ...]
+
+<img width="1040" height="438" alt="image" src="https://github.com/user-attachments/assets/080ad732-6a85-4cf8-931a-32ce83169099" />
 
 
 
