@@ -232,6 +232,15 @@ echo -n "aabbb" > f2.txt
 <img width="1040" height="438" alt="image" src="https://github.com/user-attachments/assets/080ad732-6a85-4cf8-931a-32ce83169099" />
 
 --- 
+## Problemas presentados durante el desarrollo de la práctica
+
+Durante el desarrollo de la práctica se presentaron principalmente dificultades relacionadas con el desconocimiento inicial de la sintaxis del lenguaje C y el manejo de comandos en la consola de Linux. Estos inconvenientes se evidenciaron al momento de trabajar con funciones de la biblioteca estándar, la manipulación de archivos y la correcta ejecución de los programas desde la terminal.
+
+Para dar solución a estos problemas, se realizó un proceso de estudio y consulta de la documentación oficial (páginas man), así como la revisión de ejemplos prácticos. Esto permitió comprender mejor el uso de funciones como fopen(), fgets(), getline(), fread() y fwrite(), además de mejorar el manejo de argumentos en línea de comandos y la ejecución de programas en entornos Linux.
+
+Gracias a este proceso de aprendizaje, fue posible superar las dificultades iniciales y desarrollar correctamente cada uno de los programas propuestos, logrando su funcionamiento sin inconvenientes.
+
+--- 
 
 ## Manifiesto de transparencia
 
