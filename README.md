@@ -119,7 +119,7 @@ imprime en la salida únicamente las líneas que contienen el término de búsqu
 ### Case sensitive:
 <img width="746" height="71" alt="image" src="https://github.com/user-attachments/assets/35d59958-2a06-44c0-8353-b318746eded7" />
 
-### Múltiples archivos Sin argumentos:
+### Múltiples archivos y Sin argumentos:
 <img width="941" height="166" alt="Captura de pantalla 2026-03-18 190344" src="https://github.com/user-attachments/assets/ccd50661-1de2-43ec-8aa8-be207f91fcb9" />
 
 ### Archivo inexistente y prueba con stdin (no se especifica el archivo pero si la palabra):
