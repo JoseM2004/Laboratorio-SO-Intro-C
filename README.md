@@ -1,5 +1,7 @@
 # Laboratorio-SO-Intro-C
 
+## LINK DEL VIDEO: https://www.youtube.com/watch?v=4_5un1xN6CA
+
 - Jose Miguel Monsalve Marin <br>
 jmiguel.monsalve@udea.edu.co <br>
 CC: 1038062019
